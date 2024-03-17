@@ -83,6 +83,7 @@ public class Game {
     }
 
     private static void aiTurn() {
+        if (aiTrueTurn()) return; //проверка хорошего хода
         int x, y;
         do {
             x = RANDOM.nextInt(SIZE_X);
@@ -91,13 +92,104 @@ public class Game {
         field[x][y] = DOT_AI;
     }
 
-    private static void newAiTurn() {
-        int x, y;
-        do {
-            x = RANDOM.nextInt(SIZE_X);
-            y = RANDOM.nextInt(SIZE_Y);
-        } while(!isCellEmpty(x, y));
-        field[x][y] = DOT_AI;
+    //метод проверяет есть ли хороший ход
+    // если есть то выполняет ход
+    private static boolean aiTrueTurn() {
+        int [] true_turn = goodDot(DOT_AI);
+        if (true_turn[0]>-1) {
+            System.out.println("Good dot to win - " + true_turn[0] + " : " + true_turn[1]);
+            field[true_turn[0]][true_turn[1]]=DOT_AI;
+            return true;
+        }
+        true_turn = goodDot(DOT_HUMAN);
+        if (true_turn[0]>-1){
+            System.out.println("Good DOT not to lose - " + true_turn[0] + " : " + true_turn[1]);
+            field[true_turn[0]][true_turn[1]]=DOT_AI;
+            return true;
+        }
+        System.out.println("Bad DOT" + true_turn[0] + " : " + true_turn[1]);
+        return false;
+    }
+
+
+    //возвращает координаты хорошего хода в массиве
+    private static int[] goodDot(char symbol) {
+        int count_symbol_in_line = 0;
+        int true_x=-1, true_y=-1;
+        // Поиск первого хорошего хода по всем горизонталям
+        for(int x=0; x<SIZE_X; x++ ){
+            count_symbol_in_line = 0;
+            true_x=-1;
+            true_y=-1;
+            for (int y=0; y<SIZE_Y; y++){
+                if (symbol==field[x][y]) count_symbol_in_line++;
+                else if (field[x][y]==DOT_EMPTY) {
+                    true_x = x;
+                    true_y = y;
+                }
+            }
+            System.out.println("line - " + x + " count = " + count_symbol_in_line + " x = " + true_x + "| y = " + true_y);
+            if ((count_symbol_in_line==(SIZE_Y-1))&&(true_x>-1)) {
+                System.out.println(symbol + " - Поиск первого хорошего хода по всем горизонталям");
+                return new int[] {true_x,true_y};}
+        }
+
+        // Поиск первого хорошего хода по вертикалям
+        for (int x = 0; x < SIZE_X; x++) {
+            count_symbol_in_line = 0;
+            true_x=-1;
+            true_y=-1;
+            for (int y = 0; y < SIZE_Y; y++) {
+                if (symbol == field[y][x]) count_symbol_in_line++;
+                else if (field[y][x]==DOT_EMPTY) {
+                    true_x = y;
+                    true_y = x;
+                }
+            }
+            System.out.println("Vert - " + x + " count = " + count_symbol_in_line + " x = " + true_x + "| y = " + true_y);
+            if ((count_symbol_in_line==(SIZE_Y-1))&&(true_x>-1)) {
+                System.out.println(symbol + " - Поиск первого хорошего хода по вертикалям");
+                return new int[] {true_x,true_y};}
+            }
+
+        count_symbol_in_line = 0;
+        true_x=-1;
+        true_y=-1;
+
+        // Поиск первого хорошего хода главной диагонали
+        for (int y = 0; y < SIZE_Y; y++) {
+            if (symbol == field[y][y]) count_symbol_in_line++;
+            else if (field[y][y] == DOT_EMPTY) {
+                true_x = y;
+                true_y = y;
+            }
+
+        }
+        System.out.println("MainDiag - count = " + count_symbol_in_line + " x = " + true_x + "| y = " + true_y);
+        if ((count_symbol_in_line==(SIZE_Y-1))&&(true_x>-1)) {
+            System.out.println(symbol + " - Поиск первого хорошего хода главной диагонали");
+            return new int[] {true_x,true_y};}
+
+        count_symbol_in_line = 0;
+        true_x=-1;
+        true_y=-1;
+
+        // Проверка по побочной диагонали
+        for (int y = 0; y < SIZE_Y; y++) {
+            if (symbol == field[y][SIZE_Y - 1 - y]) count_symbol_in_line++;
+            else if (field[y][SIZE_Y - 1 - y]==DOT_EMPTY) {
+                true_x = y;
+                true_y = (SIZE_Y - 1 - y);
+            }
+
+        }
+        System.out.println("SideDiag - count = " + count_symbol_in_line + " x = " + true_x + "| y = " + true_y);
+        if ((count_symbol_in_line==(SIZE_Y-1))&&(true_x>-1)) {
+            System.out.println(symbol + " - Поиск первого хорошего хода по побочной диагонали");
+            return new int[] {true_x,true_y};
+        }
+
+        return new int[] {-1,-1};
     }
 
     private static boolean gameCheck(char symbol, String message){
