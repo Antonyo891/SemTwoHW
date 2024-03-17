@@ -91,6 +91,15 @@ public class Game {
         field[x][y] = DOT_AI;
     }
 
+    private static void newAiTurn() {
+        int x, y;
+        do {
+            x = RANDOM.nextInt(SIZE_X);
+            y = RANDOM.nextInt(SIZE_Y);
+        } while(!isCellEmpty(x, y));
+        field[x][y] = DOT_AI;
+    }
+
     private static boolean gameCheck(char symbol, String message){
         if(checkWin(symbol)){
             System.out.println(message);
