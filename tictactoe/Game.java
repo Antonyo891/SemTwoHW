@@ -13,8 +13,8 @@ public class Game {
     private static final Random RANDOM = new Random();
 
     private static char[][] field;
-    private static final int SIZE_X = 3;
-    private static final int SIZE_Y = 3;
+    private static final int SIZE_X = 4;
+    private static final int SIZE_Y = 4;
 
     public static void main(String[] args) {
         initialize();
@@ -66,7 +66,8 @@ public class Game {
     private static void humanTurn() {
         int x, y;
         do {
-            System.out.println("Enter the coordinates Х и Y  (1 to 3) space separated: ");
+            System.out.println("Enter the coordinates Х и Y (1 to" +
+                    SIZE_Y +  ") space separated: ");
             x = SCANNER.nextInt() - 1;
             y = SCANNER.nextInt() - 1;
         } while(!isCellValid(x, y) || !isCellEmpty(x, y));
