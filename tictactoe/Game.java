@@ -92,7 +92,7 @@ public class Game {
     }
 
     private static boolean gameCheck(char symbol, String message){
-        if(cycleCheckWin(symbol)){
+        if(checkWin(symbol)){
             System.out.println(message);
             return true;
         }
@@ -114,37 +114,50 @@ public class Game {
     }
 
     private static boolean checkWin(char symbol) {
-        // Проверка по трем горизонталям
-        if (field[0][0] == symbol && field[0][1] == symbol && field[0][2] == symbol) return true;
-        if (field[1][0] == symbol && field[1][1] == symbol && field[1][2] == symbol) return true;
-        if (field[2][0] == symbol && field[2][1] == symbol && field[2][2] == symbol) return true;
+//        // Проверка по трем горизонталям
+//        if (field[0][0] == symbol && field[0][1] == symbol && field[0][2] == symbol) return true;
+//        if (field[1][0] == symbol && field[1][1] == symbol && field[1][2] == symbol) return true;
+//        if (field[2][0] == symbol && field[2][1] == symbol && field[2][2] == symbol) return true;
+//
+//        // Проверка по диагоналям
+//        if (field[0][0] == symbol && field[1][1] == symbol && field[2][2] == symbol) return true;
+//        if (field[0][2] == symbol && field[1][1] == symbol && field[2][0] == symbol) return true;
+//
+//        // Проверка по трем вертикалям
+//        if (field[0][0] == symbol && field[1][0] == symbol && field[2][0] == symbol) return true;
+//        if (field[0][1] == symbol && field[1][1] == symbol && field[2][1] == symbol) return true;
+//        if (field[0][2] == symbol && field[1][2] == symbol && field[2][2] == symbol) return true;
 
-        // Проверка по диагоналям
-        if (field[0][0] == symbol && field[1][1] == symbol && field[2][2] == symbol) return true;
-        if (field[0][2] == symbol && field[1][1] == symbol && field[2][0] == symbol) return true;
-
-        // Проверка по трем вертикалям
-        if (field[0][0] == symbol && field[1][0] == symbol && field[2][0] == symbol) return true;
-        if (field[0][1] == symbol && field[1][1] == symbol && field[2][1] == symbol) return true;
-        if (field[0][2] == symbol && field[1][2] == symbol && field[2][2] == symbol) return true;
-
-        return false;
+        return  cycleCheckWin(symbol);//false;
     }
     private static boolean cycleCheckWin(char symbol) {
-        // Проверка по всем горизонталям и вертикалям
+        // Проверка по всем горизонталям
         for(int x=0; x<SIZE_X; x++ ){
             for (int y=0; y<SIZE_Y; y++){
                 if (!(symbol==field[x][y])) break;
-                else if (!(symbol==field[y][x])) break;
-                if (y==SIZE_Y-1) return true;
+                if (y==(SIZE_Y-1)) return true;
             }
         }
 
-        // Проверка по диагоналям
-        for (int y = 0; y < SIZE_Y; y++) {
-            if (!(symbol==field[y][y])&&(!(symbol==field[y][SIZE_Y-1-y]))) break;
+        // Проверка по вертикалям
+        for(int x=0; x<SIZE_X; x++ ){
+            for (int y=0; y<SIZE_Y; y++){
+                if (!(symbol==field[y][x])) break;
+                if (y==(SIZE_Y-1)) return true;
+            }
         }
 
+        // Проверка по главной диагонали
+        for (int y = 0; y < SIZE_Y; y++) {
+            if (!(symbol==field[y][y])) break;
+            if (y==(SIZE_Y-1)) return true;
+        }
+
+        // Проверка по побочной диагонали
+        for (int y = 0; y < SIZE_Y; y++) {
+            if (!(symbol==field[y][SIZE_Y-1-y])) break;
+            if (y==(SIZE_Y-1)) return true;
+        }
         return false;
     }
 }
